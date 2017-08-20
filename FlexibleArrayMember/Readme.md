@@ -1,0 +1,1 @@
+[Flexible array member](https://en.wikipedia.org/wiki/Flexible_array_member) for C++.
