@@ -4,15 +4,15 @@
 namespace tower120::containers{
 
     template<class Header, class T>
-    class FlexibleMemberArray {
+    class FlexibleArrayMember {
         struct alignas(T) AlignedHeader : Header{};
 
         Header* self(){
-            static_cast<Header*>(this);
+            return static_cast<Header*>(this);
         }
 
     protected:
-        static Header* make(const int capacity) {
+        static Header* make(const unsigned int capacity) {
             Header *chunk = static_cast<Header *>(std::malloc(sizeof(AlignedHeader) + sizeof(T) * capacity));
             return chunk;
         }

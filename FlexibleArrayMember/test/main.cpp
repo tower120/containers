@@ -1,19 +1,21 @@
 #include <iostream>
 #include <memory>
+#include <new>
 
 #include <FlexibleArrayMember.h>
 
 using namespace tower120::containers;
 
-struct Chunk : public FlexibleMemberArray<Chunk, int>{
+struct Chunk : public FlexibleArrayMember<Chunk, int>{
     int capacity;
+
     static void* operator new(std::size_t sz, int capacity) {
         Chunk* self = make(capacity);
         self->capacity = capacity;
         return self;
     }
 
-     using FlexibleMemberArray::elements;
+     using FlexibleArrayMember::elements;
 };
 
 int main() {
