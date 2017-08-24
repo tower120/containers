@@ -69,11 +69,23 @@ void test_threaded_emplace(){
     show_sum(list2);
 }
 
+void test_forrange(){
+    GrowOnlyChuckedArray<int> list;
+
+    list.emplace(1);
+
+    for(int i: list){
+        std::cout << i << std::endl;
+    }
+}
+
 int main() {
     //test_simple_emplace();
-    test_threaded_emplace();
+    //test_threaded_emplace();
 
-    //Benchmark().benchmark();
+    //test_forrange();
+
+    Benchmark().benchmark();
 
 #ifdef _MSC_VER
 	char ch;

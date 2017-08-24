@@ -23,12 +23,20 @@ struct Benchmark{
 
         int traverse() {
             int sum = 0;
+            
 
+			/*
             list.iterate([&](const auto& value) {
                 sum += value();
-                //return Continue;
             });
-
+			*/
+            
+			
+            for(const auto& value : list){
+                sum += value();
+            }
+			
+			
             return sum;
         }
     };
@@ -58,8 +66,8 @@ struct Benchmark{
     void benchmark() {
         using namespace std::chrono;
 
-        const int times = 10;
-        const int count = 40'000;
+        const int times = 100;
+        const int count = 100'000;
         using T = std::function<int()>;
         using TimeUnit = microseconds;
 

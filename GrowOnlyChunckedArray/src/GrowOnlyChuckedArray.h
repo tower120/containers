@@ -100,6 +100,65 @@ namespace tower120::containers{
         GrowOnlyChuckedArray(const GrowOnlyChuckedArray& other) = delete;
         GrowOnlyChuckedArray& operator=(GrowOnlyChuckedArray& other) = delete;
 
+		struct end_iterator {};
+        struct iterator{
+            Chunk* chunk;
+            std::size_t chunk_size;
+            std::size_t index;
+
+            iterator(Chunk* chunk, std::size_t chunk_size, std::size_t index)
+                : chunk(chunk)
+                , chunk_size(chunk_size)
+                , index(index)
+            {}
+
+            T& operator*(){
+                return chunk->elements()[index];
+            }
+
+            iterator& operator++(){
+                index++;
+                if (index == chunk_size /*chunk->built_size*/){           // or read from chunk->built_size
+                    // move to prev chunk
+                    chunk = chunk->prev;
+                    chunk_size = chunk ? static_cast<std::size_t>(chunk->built_size) : 0;
+                    index = 0;
+                    return *this;
+                }
+
+                return *this;
+            }
+
+			bool operator==(const end_iterator&) const {
+				return chunk == nullptr;
+			}
+			bool operator!=(const end_iterator&) const {
+				return chunk != nullptr;
+			}
+
+            /*bool operator==(const iterator& other) const{
+                return chunk == other.chunk && index == other.index;
+            }
+            bool operator!=(const iterator& other) const{
+                return !operator==(other);
+            }*/
+       };
+
+        iterator begin(){
+            return {
+                head
+                , head ? static_cast<std::size_t>(static_cast<Chunk*>(head)->built_size) : 0
+                , 0
+            };
+        }
+		end_iterator end() const {
+			return {};
+		}
+        /*iterator end() const {
+            return {nullptr, 0, 0};
+        }*/
+
+
         // thread safe
         template<class ...Args>
         void emplace(Args&&...args){
@@ -138,7 +197,7 @@ namespace tower120::containers{
 
             while (chunk) {
 				const unsigned int size = chunk->built_size;
-                for(unsigned int i=0;i < size;++i){
+                for(unsigned int i=0;i < size /*chunk->built_size*/;++i){
                     closure(chunk->elements()[i]);
                 }
 
