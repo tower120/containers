@@ -22,6 +22,8 @@ namespace tower120::containers{
 
             unsigned int capacity;      // const
 
+            // use SpinLock instead reserved_size + has_next ?
+
             Size reserved_size{0};
             Size built_size{0};
 
@@ -221,6 +223,24 @@ namespace tower120::containers{
             }
 
             head = nullptr;
+        }
+
+        T& back(){
+            Chunk* head = this->head;
+            return head->elements()[head->built_size];
+        }
+        void pop_back(){
+            Chunk* chunk = this->head;
+
+            back().~T();
+            chunk->built_size--;
+            chunk->reserved_size--;
+
+            if(chunk->built_size == 0){
+                Chunk* prev = chunk->prev;
+                    delete chunk;
+                head = prev;
+            }
         }
 
         ~GrowOnlyChuckedArray(){

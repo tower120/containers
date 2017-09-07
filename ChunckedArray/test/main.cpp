@@ -22,6 +22,11 @@ void test_emplace(){
     list.iterate([](int i){
         std::cout << i << std::endl;
     });
+
+    std::cout << "for range" << std::endl;
+    for(int i : list.range().values()){
+        std::cout << i << std::endl;
+    }
 }
 
 
